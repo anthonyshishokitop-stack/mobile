@@ -7,6 +7,31 @@
   <meta name="description" content="Local-first screen time tracker • Pomodoro • Charts • Rewards • AR breaks"/>
   <meta name="theme-color" content="#6366f1"/>
 
+  <!-- PWA Manifest (embedded) -->
+  <link rel="manifest" href="data:application/manifest+json,{
+    &quot;name&quot;: &quot;FocusForge&quot;,
+    &quot;short_name&quot;: &quot;FocusForge&quot;,
+    &quot;description&quot;: &quot;Local screen time tracker, Pomodoro, rewards &amp; AR breaks&quot;,
+    &quot;start_url&quot;: &quot;./&quot;,
+    &quot;display&quot;: &quot;standalone&quot;,
+    &quot;background_color&quot;: &quot;#f8f9fc&quot;,
+    &quot;theme_color&quot;: &quot;#6366f1&quot;,
+    &quot;icons&quot;: [
+      {
+        &quot;src&quot;: &quot;icons/icon-192.png&quot;,
+        &quot;sizes&quot;: &quot;192x192&quot;,
+        &quot;type&quot;: &quot;image/png&quot;,
+        &quot;purpose&quot;: &quot;any maskable&quot;
+      },
+      {
+        &quot;src&quot;: &quot;icons/icon-512.png&quot;,
+        &quot;sizes&quot;: &quot;512x512&quot;,
+        &quot;type&quot;: &quot;image/png&quot;,
+        &quot;purpose&quot;: &quot;any maskable&quot;
+      }
+    ]
+  }"/>
+
   <style>
     :root {
       --primary:      #6366f1;
@@ -35,12 +60,7 @@
       --border:       #334155;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
@@ -69,13 +89,8 @@
       letter-spacing: -0.7px;
     }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1.6rem;
-    }
+    .header-right { display:flex; align-items:center; gap:1.6rem; }
 
-    /* ── SIDEBAR ── */
     .sidebar {
       width: 260px;
       background: var(--card);
@@ -91,9 +106,7 @@
       z-index: 90;
     }
 
-    .sidebar.open {
-      transform: translateX(0);
-    }
+    .sidebar.open { transform: translateX(0); }
 
     @media (min-width: 1024px) {
       .sidebar { transform: translateX(0); }
@@ -119,13 +132,11 @@
       transition: all 0.18s ease;
     }
 
-    .sidebar a:hover,
-    .sidebar a.active {
+    .sidebar a:hover, .sidebar a.active {
       background: var(--primary);
       color: white;
     }
 
-    /* ── MAIN ── */
     main {
       padding: var(--gap) 1.8rem;
       max-width: 1480px;
@@ -141,12 +152,7 @@
       margin-bottom: calc(var(--gap) * 1.4);
     }
 
-    h2 {
-      font-size: 1.65rem;
-      font-weight: 700;
-      margin-bottom: 1.6rem;
-      color: var(--text);
-    }
+    h2 { font-size: 1.65rem; font-weight: 700; margin-bottom: 1.6rem; color: var(--text); }
 
     .grid-3 {
       display: grid;
@@ -167,25 +173,10 @@
       border-color: rgba(99,102,241,0.28);
     }
 
-    .stat-box .label {
-      font-size: 0.97rem;
-      color: var(--text-light);
-      margin-bottom: 0.7rem;
-    }
+    .stat-box .label { font-size: 0.97rem; color: var(--text-light); margin-bottom: 0.7rem; }
+    .stat-box .value { font-size: 3rem; font-weight: 800; line-height: 1; }
 
-    .stat-box .value {
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    /* Forms & Buttons */
-    .input-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.2rem;
-      align-items: center;
-    }
+    .input-group { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; }
 
     input, select, button {
       padding: 0.95rem 1.5rem;
@@ -215,7 +206,6 @@
     .btn-secondary { background: var(--border); color: var(--text); }
     .btn-danger    { background: var(--danger); color: white; }
 
-    /* Pomodoro */
     #pomodoroTimer {
       font-size: 5.6rem;
       font-weight: 800;
@@ -231,7 +221,6 @@
       margin-bottom: 2.2rem;
     }
 
-    /* Charts */
     .chart-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
@@ -247,11 +236,8 @@
       padding: 1.4rem;
     }
 
-    [data-theme="dark"] .chart-container {
-      background: rgba(255,255,255,0.035);
-    }
+    [data-theme="dark"] .chart-container { background: rgba(255,255,255,0.035); }
 
-    /* AR Modal */
     #arModal {
       position: fixed;
       inset: 0;
@@ -280,15 +266,9 @@
       margin: 2.2rem 0;
     }
 
-    .small {
-      font-size: 0.96rem;
-      color: var(--text-light);
-    }
+    .small { font-size: 0.96rem; color: var(--text-light); }
 
-    /* Responsive */
-    @media (max-width: 1023px) {
-      .sidebar { box-shadow: 6px 0 35px rgba(0,0,0,0.32); }
-    }
+    @media (max-width: 1023px) { .sidebar { box-shadow: 6px 0 35px rgba(0,0,0,0.32); } }
 
     @media (max-width: 640px) {
       header { padding: 1rem 1.2rem; }
@@ -307,7 +287,6 @@
     <button id="menuBtn" style="font-size:1.9rem; background:none; border:none; cursor:pointer; color:var(--text);">☰</button>
     <h1>FocusForge</h1>
   </div>
-
   <div class="header-right">
     <span id="pointsDisplay" style="font-weight:700; color:var(--primary); font-size:1.25rem;">Points: 0</span>
     <button id="themeBtn" title="Toggle theme" style="font-size:1.6rem; background:none; border:none; cursor:pointer; color:var(--text);">🌙</button>
@@ -327,7 +306,6 @@
 </div>
 
 <main>
-
   <section id="dashboard" class="card">
     <h2>Welcome back, ANTHONY!</h2>
     <div class="grid-3">
@@ -368,16 +346,13 @@
   <section id="pomodoro" class="card">
     <h2>Pomodoro Timer</h2>
     <p class="small" style="margin-bottom:1.6rem;">25 min focus • 5 min break • long break after 4 cycles</p>
-
     <div id="pomodoroTimer">25:00</div>
     <div id="pomodoroStatus">Ready for focus session</div>
-
     <div style="display:flex; justify-content:center; gap:1.3rem; flex-wrap:wrap; margin:2.2rem 0;">
       <button class="btn-primary" id="pomoStartBtn" onclick="startPomodoro()">Start</button>
       <button class="btn-secondary" id="pomoPauseBtn" disabled onclick="pausePomodoro()">Pause</button>
       <button class="btn-secondary" onclick="resetPomodoro()">Reset</button>
     </div>
-
     <div style="text-align:center;">
       <span class="small">Cycles completed: </span>
       <span id="pomodoroCycles" style="font-weight:700; color:var(--primary);">0</span>
@@ -440,143 +415,124 @@
               <input type="file" id="importInput" accept=".json" style="display:none;"/>
             </label>
             <button class="btn-secondary" onclick="exportCSV()">Export CSV</button>
-            <button class="btn-danger" onclick="clearAllData()">Reset All</button>
           </div>
         </div>
       </div>
     </div>
   </section>
-
 </main>
 
+<!-- AR Modal -->
 <div id="arModal">
   <div class="content">
-    <h2>Relaxation Zone</h2>
-    <p class="small" style="margin:1.3rem 0 2.2rem;">Breathe • Observe • Reset</p>
+    <h2>Take a Break</h2>
+    <p class="small">Enjoy this relaxing 3D visualization</p>
     <canvas id="arCanvas"></canvas>
-    <button class="btn-primary" onclick="closeBreakMode()" style="min-width:220px; padding:1.2rem 2.4rem; margin-top:2.2rem; font-size:1.05rem;">Back to Work</button>
+    <button class="btn-primary" onclick="closeBreakMode()">Close & Continue</button>
   </div>
 </div>
 
+<!-- Service Worker Registration for PWA -->
 <script>
-// ──────────────────────────────────────────────
-// STATE
-let currentSession = null;
-let logs = JSON.parse(localStorage.getItem('ff_logs') || '[]');
-let points = parseInt(localStorage.getItem('ff_points') || '0');
-let dailyGoalMin = parseInt(localStorage.getItem('ff_goal') || '120');
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered'))
+        .catch(err => console.log('Service Worker failed:', err));
+    });
+  }
+</script>
 
-// Pomodoro
-let pomoTimer = null;
-let pomoTime = 25 * 60;
-let pomoPhase = 'work';
-let pomoCycles = 0;
-let pomoPaused = true;
-
+<!-- Main Application Logic -->
+<script>
 const els = {
   points: document.getElementById('pointsDisplay'),
   streak: document.getElementById('streak'),
-  goal: document.getElementById('goalProgress'),
+  goalProgress: document.getElementById('goalProgress'),
   wellbeing: document.getElementById('wellbeing'),
   status: document.getElementById('status'),
-  history: document.getElementById('historyList'),
-  stopBtn: document.getElementById('stopBtn'),
   appName: document.getElementById('appName'),
   category: document.getElementById('category'),
-  themeBtn: document.getElementById('themeBtn'),
-  menuBtn: document.getElementById('menuBtn'),
-  sidebar: document.getElementById('sidebar'),
-  arModal: document.getElementById('arModal'),
-  arCanvas: document.getElementById('arCanvas'),
-  suggestions: document.getElementById('suggestionsList'),
-  goalInput: document.getElementById('goalInput'),
-  importInput: document.getElementById('importInput'),
+  stopBtn: document.getElementById('stopBtn'),
   pomoTimer: document.getElementById('pomodoroTimer'),
   pomoStatus: document.getElementById('pomodoroStatus'),
   pomoStartBtn: document.getElementById('pomoStartBtn'),
   pomoPauseBtn: document.getElementById('pomoPauseBtn'),
   pomoCycles: document.getElementById('pomodoroCycles'),
-  dailyChart: document.getElementById('dailyChart').getContext('2d'),
-  topAppsChart: document.getElementById('topAppsChart').getContext('2d')
+  history: document.getElementById('historyList'),
+  suggestions: document.getElementById('suggestionsList'),
+  dailyCtx: document.getElementById('dailyChart')?.getContext('2d'),
+  topAppsCtx: document.getElementById('topAppsChart')?.getContext('2d'),
+  arModal: document.getElementById('arModal'),
+  arCanvas: document.getElementById('arCanvas'),
+  goalInput: document.getElementById('goalInput'),
+  importInput: document.getElementById('importInput')
 };
 
-// ──────────────────────────────────────────────
-// THEME
-function setTheme(dark) {
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  els.themeBtn.textContent = dark ? '☀️' : '🌙';
-  localStorage.setItem('ff_theme', dark ? 'dark' : 'light');
-}
+let logs = JSON.parse(localStorage.getItem('focusforge_logs')) || [];
+let points = parseInt(localStorage.getItem('focusforge_points')) || 0;
+let dailyGoalMin = parseInt(localStorage.getItem('focusforge_goal')) || 120;
+let currentSession = null;
+let pomoTime = 25 * 60;
+let pomoPhase = 'work';
+let pomoPaused = true;
+let pomoInterval;
+let pomoCycles = parseInt(localStorage.getItem('focusforge_pomoCycles')) || 0;
 
-let savedTheme = localStorage.getItem('ff_theme');
-if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  setTheme(true);
-}
-els.themeBtn.onclick = () => setTheme(document.documentElement.dataset.theme !== 'dark');
-
-// ──────────────────────────────────────────────
-// SIDEBAR (mobile)
-els.menuBtn.onclick = () => els.sidebar.classList.toggle('open');
-document.querySelectorAll('.sidebar a').forEach(a => {
-  a.onclick = () => {
-    if (window.innerWidth < 1024) els.sidebar.classList.remove('open');
-  };
-});
-
-// ──────────────────────────────────────────────
-// HELPERS
 function formatTime(ts) {
   return new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 }
 
-function formatDuration(s) {
-  if (s < 60) return s + 's';
-  let m = Math.floor(s / 60); let sec = s % 60;
-  if (m < 60) return m + 'm' + (sec ? ' ' + sec + 's' : '');
-  let h = Math.floor(m / 60);
-  return h + 'h ' + (m % 60 ? m % 60 + 'm' : '');
+function formatDuration(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
 function formatTimer(sec) {
-  let m = Math.floor(sec / 60);
-  let s = sec % 60;
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
   return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
 function saveData() {
-  localStorage.setItem('ff_logs', JSON.stringify(logs));
-  localStorage.setItem('ff_points', points);
-  localStorage.setItem('ff_goal', dailyGoalMin);
+  localStorage.setItem('focusforge_logs', JSON.stringify(logs));
+  localStorage.setItem('focusforge_points', points);
+  localStorage.setItem('focusforge_goal', dailyGoalMin);
+  localStorage.setItem('focusforge_pomoCycles', pomoCycles);
 }
 
 function refreshUI() {
   els.points.textContent = `Points: ${points}`;
 
-  // Streak
-  const days = [...new Set(logs.map(l => l.date))].sort();
+  // Streak (simple version)
+  const today = new Date().toISOString().split('T')[0];
+  const uniqueDays = [...new Set(logs.map(l => l.date))].sort();
   let streak = 0;
-  if (days.length) {
-    let last = new Date(days.pop());
-    streak = 1;
-    while (days.length) {
-      let d = new Date(days.pop());
-      if ((last - d) / 864e5 === 1) { streak++; last = d; } else break;
+  if (uniqueDays.length > 0) {
+    let prev = new Date(uniqueDays[uniqueDays.length-1]);
+    if (prev.toISOString().split('T')[0] === today) streak = 1;
+    for (let i = uniqueDays.length-2; i >= 0; i--) {
+      const d = new Date(uniqueDays[i]);
+      if ((prev - d) / (1000*60*60*24) === 1) {
+        streak++;
+        prev = d;
+      } else break;
     }
   }
-  els.streak.textContent = streak + ' d';
+  els.streak.textContent = `${streak} d`;
 
-  // Today's goal
-  const today = new Date().toISOString().split('T')[0];
-  const todaySec = logs.filter(l => l.date === today).reduce((a,b) => a + b.duration, 0);
-  const progress = Math.min(100, Math.round(todaySec / (dailyGoalMin * 60) * 100));
-  els.goal.textContent = progress + '%';
-  els.goal.style.color = progress > 90 ? 'var(--danger)' : progress > 70 ? 'var(--warning)' : 'var(--success)';
+  // Today's progress
+  const todaySec = logs.filter(l => l.date === today).reduce((sum, l) => sum + l.duration, 0);
+  const progress = Math.min(100, Math.round((todaySec / 60) / dailyGoalMin * 100));
+  els.goalProgress.textContent = `${progress}%`;
 
-  // Well-being (very rough)
-  const avgDailyH = logs.length ? (logs.reduce((a,b)=>a+b.duration,0) / new Set(logs.map(l=>l.date)).size) / 3600 : 0;
+  // Very rough well-being score
+  const uniqueDates = new Set(logs.map(l => l.date)).size;
+  const avgDailyH = uniqueDates ? (logs.reduce((a,b)=>a+b.duration,0) / uniqueDates) / 3600 : 0;
   const wb = Math.max(0, Math.min(100, Math.round(100 - avgDailyH * 5)));
-  els.wellbeing.textContent = wb + ' / 100';
-  els.wellbeing.style.color = wb > 70 ? 'var(--success)' : wb > 40 ? 'var(--warning)' : 'var(--danger)';
+  els.wellbeing.textContent = `${wb} / 100`;
 
   // History
   els.history.innerHTML = logs.length === 0
@@ -592,7 +548,11 @@ function refreshUI() {
     `).join('');
 
   // Suggestions
-  const topApp = logs.reduce((a,b) => ((a[b.app]||0) < b.duration ? b : a), {}).app || '—';
+  const appCounts = logs.reduce((acc, l) => {
+    acc[l.app] = (acc[l.app] || 0) + l.duration;
+    return acc;
+  }, {});
+  const topApp = Object.keys(appCounts).reduce((a, b) => appCounts[a] > appCounts[b] ? a : b, '—');
   els.suggestions.innerHTML = `
     <li>Most used: <strong>${topApp}</strong> – consider Pomodoro blocks</li>
     ${progress > 85 ? '<li style="color:var(--danger);">Close to daily goal – time for a break</li>' : ''}
@@ -602,81 +562,87 @@ function refreshUI() {
 
   els.pomoCycles.textContent = pomoCycles;
 
-  updateCharts();
+  if (els.dailyCtx) updateCharts();
 }
 
 function updateCharts() {
-  // Daily bar
   const dailyData = {};
   logs.forEach(log => {
     dailyData[log.date] = (dailyData[log.date] || 0) + log.duration / 3600;
   });
   const labels = Object.keys(dailyData).slice(-7);
-  const data = labels.map(date => dailyData[date]);
-  drawBarChart(els.dailyChart, labels, data, 'Hours');
+  const data = labels.map(date => dailyData[date] || 0);
+  drawBarChart(els.dailyCtx, labels, data);
 
-  // Top apps pie
   const appData = {};
   logs.forEach(log => {
     appData[log.app] = (appData[log.app] || 0) + log.duration;
   });
-  const appLabels = Object.keys(appData).slice(0,5);
-  const appValues = appLabels.map(app => appData[app] / 3600);
-  drawPieChart(els.topAppsChart, appLabels, appValues);
+  const sorted = Object.entries(appData)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0,5);
+  const appLabels = sorted.map(([app]) => app);
+  const appValues = sorted.map(([,val]) => val / 3600);
+  drawPieChart(els.topAppsCtx, appLabels, appValues);
 }
 
-function drawBarChart(ctx, labels, data, ylabel) {
-  const barWidth = 28;
-  const height = ctx.canvas.height;
-  const width = ctx.canvas.width;
-  const maxVal = Math.max(...data, 1);
-  ctx.clearRect(0,0,width,height);
+function drawBarChart(ctx, labels, data) {
+  if (!ctx) return;
+  const w = ctx.canvas.width;
+  const h = ctx.canvas.height;
+  const max = Math.max(...data, 1);
+  ctx.clearRect(0,0,w,h);
+
+  const barWidth = 32;
+  const gap = (w - barWidth * data.length) / (data.length + 1);
 
   data.forEach((val, i) => {
-    const barHeight = (val / maxVal) * (height - 50);
+    const height = (val / max) * (h - 60);
     ctx.fillStyle = 'var(--primary)';
-    ctx.fillRect(i * (width / data.length) + 30, height - barHeight - 30, barWidth, barHeight);
+    ctx.fillRect(gap + i*(barWidth+gap), h - height - 40, barWidth, height);
 
     ctx.fillStyle = 'var(--text-light)';
     ctx.font = '12px system-ui';
     ctx.textAlign = 'center';
-    ctx.fillText(labels[i].slice(5), i * (width / data.length) + 30 + barWidth/2, height - 8);
+    ctx.fillText(labels[i].slice(5), gap + i*(barWidth+gap) + barWidth/2, h - 12);
   });
 }
 
 function drawPieChart(ctx, labels, data) {
-  const width = ctx.canvas.width;
-  const height = ctx.canvas.height;
+  if (!ctx) return;
+  const w = ctx.canvas.width;
+  const h = ctx.canvas.height;
+  const cx = w/2, cy = h/2;
+  const radius = Math.min(w,h)/2 - 40;
   const total = data.reduce((a,b)=>a+b,0);
-  let startAngle = 0;
+  let start = 0;
   const colors = ['#6366f1','#10b981','#f59e0b','#ef4444','#818cf8'];
 
-  ctx.clearRect(0,0,width,height);
+  ctx.clearRect(0,0,w,h);
 
   data.forEach((val, i) => {
-    const sliceAngle = (val / total) * 2 * Math.PI;
+    const angle = (val / total) * 2 * Math.PI;
     ctx.beginPath();
-    ctx.moveTo(width/2, height/2);
-    ctx.arc(width/2, height/2, Math.min(width,height)/2 - 30, startAngle, startAngle + sliceAngle);
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, start, start + angle);
     ctx.closePath();
     ctx.fillStyle = colors[i % colors.length];
     ctx.fill();
-    startAngle += sliceAngle;
+    start += angle;
   });
 
   // Legend
   labels.forEach((label, i) => {
-    const y = 30 + i * 32;
+    const y = 30 + i * 28;
     ctx.fillStyle = colors[i % colors.length];
-    ctx.fillRect(20, y - 12, 18, 18);
-    ctx.fillStyle = 'var(--text-light)';
-    ctx.font = '14px system-ui';
-    ctx.fillText(label, 48, y + 5);
+    ctx.fillRect(20, y - 10, 16, 16);
+    ctx.fillStyle = 'var(--text)';
+    ctx.font = '13px system-ui';
+    ctx.fillText(label, 44, y + 5);
   });
 }
 
-// ──────────────────────────────────────────────
-// SESSION
+// Session tracking
 function startSession() {
   if (currentSession) return;
   const app = els.appName.value.trim();
@@ -714,68 +680,69 @@ function stopSession() {
   els.category.value = '';
   currentSession = null;
 
-  const todaySec = logs.filter(l=>l.date===new Date().toISOString().split('T')[0]).reduce((a,b)=>a+b.duration,0);
+  const today = new Date().toISOString().split('T')[0];
+  const todaySec = logs.filter(l=>l.date===today).reduce((a,b)=>a+b.duration,0);
   if (todaySec > dailyGoalMin*60*0.88) setTimeout(openBreakMode, 1600);
 }
 
-// ──────────────────────────────────────────────
-// POMODORO
+// Pomodoro
 function updatePomoTimer() {
   els.pomoTimer.textContent = formatTimer(pomoTime);
   if (pomoTime > 0) {
     pomoTime--;
-  } else {
-    clearInterval(pomoTimer);
-    if (pomoPhase === 'work') {
-      pomoCycles++;
-      points += 15;
-      if (pomoCycles % 4 === 0) {
-        pomoTime = 15 * 60;
-        els.pomoStatus.textContent = 'Long break';
-      } else {
-        pomoTime = 5 * 60;
-        els.pomoStatus.textContent = 'Short break';
-      }
-      pomoPhase = 'break';
-      saveData();
-      refreshUI();
-      openBreakMode();
-    } else {
-      pomoTime = 25 * 60;
-      pomoPhase = 'work';
-      els.pomoStatus.textContent = 'Ready for next focus?';
-    }
-    pomoPaused = true;
-    els.pomoStartBtn.disabled = false;
-    els.pomoPauseBtn.disabled = true;
+    return;
   }
+
+  clearInterval(pomoInterval);
+  if (pomoPhase === 'work') {
+    pomoCycles++;
+    points += 15;
+    if (pomoCycles % 4 === 0) {
+      pomoTime = 15 * 60;
+      els.pomoStatus.textContent = 'Long break (15 min)';
+    } else {
+      pomoTime = 5 * 60;
+      els.pomoStatus.textContent = 'Short break (5 min)';
+    }
+    pomoPhase = 'break';
+    saveData();
+    refreshUI();
+    openBreakMode();
+  } else {
+    pomoTime = 25 * 60;
+    pomoPhase = 'work';
+    els.pomoStatus.textContent = 'Ready for next focus session';
+  }
+  pomoPaused = true;
+  els.pomoStartBtn.disabled = false;
+  els.pomoPauseBtn.disabled = true;
 }
 
 function startPomodoro() {
-  if (pomoPaused) {
-    pomoPaused = false;
-    pomoTimer = setInterval(updatePomoTimer, 1000);
-    els.pomoStartBtn.textContent = 'Restart';
-    els.pomoPauseBtn.disabled = false;
-    els.pomoStatus.textContent = pomoPhase === 'work' ? 'Focusing…' : 'Breaking…';
-    if (pomoPhase === 'work') {
-      els.appName.value = 'Pomodoro Focus';
-      els.category.value = 'work';
-      startSession();
-    }
+  if (!pomoPaused) return;
+  pomoPaused = false;
+  pomoInterval = setInterval(updatePomoTimer, 1000);
+  els.pomoStartBtn.textContent = 'Restart';
+  els.pomoPauseBtn.disabled = false;
+  els.pomoStatus.textContent = pomoPhase === 'work' ? 'Focusing…' : 'Breaking…';
+
+  if (pomoPhase === 'work') {
+    els.appName.value = 'Pomodoro Focus';
+    els.category.value = 'work';
+    startSession();
   }
 }
 
 function pausePomodoro() {
-  clearInterval(pomoTimer);
+  clearInterval(pomoInterval);
   pomoPaused = true;
   els.pomoPauseBtn.disabled = true;
   els.pomoStatus.textContent = 'Paused';
-  if (currentSession && currentSession.app.includes('Pomodoro')) stopSession();
+  if (currentSession?.app.includes('Pomodoro')) stopSession();
 }
 
 function resetPomodoro() {
-  clearInterval(pomoTimer);
+  clearInterval(pomoInterval);
   pomoTime = 25 * 60;
   pomoPhase = 'work';
   pomoPaused = true;
@@ -784,34 +751,54 @@ function resetPomodoro() {
   els.pomoStartBtn.textContent = 'Start';
   els.pomoStartBtn.disabled = false;
   els.pomoPauseBtn.disabled = true;
-  if (currentSession && currentSession.app.includes('Pomodoro')) stopSession();
+  if (currentSession?.app.includes('Pomodoro')) stopSession();
 }
 
-// ──────────────────────────────────────────────
-// BREAK (very basic rotating cube)
-function openBreakMode() { els.arModal.classList.add('open'); initAR(); }
-function closeBreakMode() { els.arModal.classList.remove('open'); }
+// Break mode
+function openBreakMode() {
+  els.arModal.classList.add('open');
+  initSimple3D();
+}
 
-function initAR() {
+function closeBreakMode() {
+  els.arModal.classList.remove('open');
+}
+
+function initSimple3D() {
   const canvas = els.arCanvas;
+  if (!canvas) return;
   const gl = canvas.getContext('webgl');
-  if (!gl) return;
+  if (!gl) {
+    console.warn("WebGL not supported");
+    return;
+  }
 
+  // Very basic spinning cube (fallback visualization)
   const vs = `
     attribute vec4 aPosition;
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
-    void main() { gl_Position = uPMatrix * uMVMatrix * aPosition; }
+    void main() {
+      gl_Position = uPMatrix * uMVMatrix * aPosition;
+    }
   `;
+
   const fs = `
     precision mediump float;
-    void main() { gl_FragColor = vec4(0.38,0.62,1.0,1.0); }
+    void main() {
+      gl_FragColor = vec4(0.38, 0.62, 1.0, 1.0);
+    }
   `;
 
   function createShader(type, src) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, src);
     gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
     return shader;
   }
 
@@ -819,58 +806,70 @@ function initAR() {
   gl.attachShader(program, createShader(gl.VERTEX_SHADER, vs));
   gl.attachShader(program, createShader(gl.FRAGMENT_SHADER, fs));
   gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(program));
+  }
   gl.useProgram(program);
+
+  const vertices = new Float32Array([
+    -1,-1,-1,  1,-1,-1,  1,1,-1,  -1,1,-1,
+    -1,-1, 1,  1,-1, 1,  1,1, 1,  -1,1, 1,
+    -1,-1,-1, -1,1,-1,  -1,1, 1,  -1,-1, 1,
+     1,-1,-1,  1,-1, 1,  1,1, 1,   1,1,-1,
+    -1,-1,-1, -1,-1, 1,  1,-1, 1,  1,-1,-1,
+    -1, 1,-1,  1, 1,-1,  1,1, 1,  -1,1, 1
+  ]);
 
   const buf = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  const pos = new Float32Array([
-    -1,-1,-1, 1,-1,-1, 1,1,-1, -1,1,-1,
-    -1,-1,1,  1,-1,1,  1,1,1,  -1,1,1,
-    -1,-1,-1, -1,1,-1, -1,1,1,  -1,-1,1,
-    1,-1,-1,  1,-1,1,  1,1,1,   1,1,-1,
-    -1,-1,-1, -1,-1,1, 1,-1,1,  1,-1,-1,
-    -1,1,-1,  1,1,-1,  1,1,1,   -1,1,1
-  ]);
-  gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-  const loc = gl.getAttribLocation(program, 'aPosition');
-  gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(loc);
+  const posLoc = gl.getAttribLocation(program, 'aPosition');
+  gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(posLoc);
 
   const pLoc = gl.getUniformLocation(program, 'uPMatrix');
   const mLoc = gl.getUniformLocation(program, 'uMVMatrix');
 
   let angle = 0;
+
   function render() {
-    gl.clearColor(0.04,0.04,0.12,1);
+    gl.clearColor(0.04, 0.04, 0.12, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
 
-    const proj = mat4Perspective(45 * Math.PI/180, canvas.width/canvas.height, 0.1, 100);
+    const proj = mat4Perspective(50 * Math.PI/180, canvas.width/canvas.height, 0.1, 100);
     let model = mat4Identity();
     model = mat4RotateX(model, angle * 0.4);
     model = mat4RotateY(model, angle * 0.7);
-    model = mat4Translate(model, [0,0,-6]);
+    model = mat4Translate(model, [0, 0, -5]);
 
     gl.uniformMatrix4fv(pLoc, false, proj);
     gl.uniformMatrix4fv(mLoc, false, model);
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, pos.length/3);
+    gl.drawArrays(gl.TRIANGLES, 0, 36);
 
     angle += 0.008;
     requestAnimationFrame(render);
   }
-  render();
 
   // Minimal matrix helpers
-  function mat4Identity() { return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]); }
+  function mat4Identity() {
+    return new Float32Array([
+      1,0,0,0,
+      0,1,0,0,
+      0,0,1,0,
+      0,0,0,1
+    ]);
+  }
 
   function mat4Perspective(fov, aspect, near, far) {
-    const f = 1/Math.tan(fov/2), nf = 1/(near-far);
+    const f = 1 / Math.tan(fov/2);
+    const nf = 1 / (near - far);
     return new Float32Array([
-      f/aspect,0,0,0,
-      0,f,0,0,
-      0,0,(far+near)*nf,-1,
-      0,0,2*far*near*nf,0
+      f/aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0, (far+near)*nf, -1,
+      0, 0, 2*far*near*nf, 0
     ]);
   }
 
@@ -881,59 +880,65 @@ function initAR() {
   }
 
   function mat4RotateX(m, rad) {
-    const s = Math.sin(rad), c = Math.cos(rad), out = new Float32Array(m);
+    const s = Math.sin(rad), c = Math.cos(rad);
+    const out = new Float32Array(m);
     const a10 = out[4], a11 = out[5], a12 = out[6], a13 = out[7];
-    out[4]  = a10*c + out[8]*s;  out[5]  = a11*c + out[9]*s;
-    out[6]  = a12*c + out[10]*s; out[7]  = a13*c + out[11]*s;
-    out[8]  = out[8]*c - a10*s;  out[9]  = out[9]*c - a11*s;
-    out[10] = out[10]*c - a12*s; out[11] = out[11]*c - a13*s;
+    out[4]  = a10*c + out[8]*s;   out[5]  = a11*c + out[9]*s;
+    out[6]  = a12*c + out[10]*s;  out[7]  = a13*c + out[11]*s;
+    out[8]  = out[8]*c - a10*s;   out[9]  = out[9]*c - a11*s;
+    out[10] = out[10]*c - a12*s;  out[11] = out[11]*c - a13*s;
     return out;
   }
 
   function mat4RotateY(m, rad) {
-    const s = Math.sin(rad), c = Math.cos(rad), out = new Float32Array(m);
+    const s = Math.sin(rad), c = Math.cos(rad);
+    const out = new Float32Array(m);
     const a00 = out[0], a01 = out[1], a02 = out[2], a03 = out[3];
-    out[0]  = a00*c - out[8]*s;  out[1]  = a01*c - out[9]*s;
-    out[2]  = a02*c - out[10]*s; out[3]  = a03*c - out[11]*s;
-    out[8]  = a00*s + out[8]*c;  out[9]  = a01*s + out[9]*c;
-    out[10] = a02*s + out[10]*c; out[11] = a03*s + out[11]*c;
+    out[0]  = a00*c - out[8]*s;   out[1]  = a01*c - out[9]*s;
+    out[2]  = a02*c - out[10]*s;  out[3]  = a03*c - out[11]*s;
+    out[8]  = a00*s + out[8]*c;   out[9]  = a01*s + out[9]*c;
+    out[10] = a02*s + out[10]*c;  out[11] = a03*s + out[11]*c;
     return out;
   }
+
+  gl.viewport(0,0, canvas.width, canvas.height);
+  render();
 }
 
-// ──────────────────────────────────────────────
-// REWARDS & DATA
+// Rewards & Data
 function redeemReward(cost, name) {
   if (points >= cost) {
     points -= cost;
     saveData();
     refreshUI();
-    alert(`Redeemed: ${name}  ✓`);
+    alert(`Redeemed: ${name} ✓`);
   } else {
     alert('Not enough points');
   }
 }
 
 function exportData() {
-  const data = { logs, points, goal: dailyGoalMin };
+  const data = { logs, points, goal: dailyGoalMin, pomoCycles };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'focusforge-backup.json';
   a.click();
+  URL.revokeObjectURL(url);
 }
 
 els.importInput.onchange = e => {
-  const file = e.target.files[0];
+  const file = e.target.files?.[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     try {
       const d = JSON.parse(ev.target.result);
-      logs = d.logs || [];
-      points = d.points || 0;
-      dailyGoalMin = d.goal || 120;
+      logs = Array.isArray(d.logs) ? d.logs : [];
+      points = Number(d.points) || 0;
+      dailyGoalMin = Number(d.goal) || 120;
+      pomoCycles = Number(d.pomoCycles) || 0;
       saveData();
       refreshUI();
       alert('Data imported successfully');
@@ -946,7 +951,9 @@ els.importInput.onchange = e => {
 
 function exportCSV() {
   const header = 'App,Category,Date,Start,End,Duration';
-  const rows = logs.map(l => `${l.app},${l.cat || ''},${l.date},${l.startTime},${l.endTime || ''},${l.duration}`);
+  const rows = logs.map(l =>
+    `${escapeCSV(l.app)},${escapeCSV(l.cat||'')},${l.date},${escapeCSV(l.startTime)},${escapeCSV(l.endTime||'')},${l.duration}`
+  );
   const csv = [header, ...rows].join('\n');
   const blob = new Blob([csv], {type: 'text/csv'});
   const url = URL.createObjectURL(blob);
@@ -954,19 +961,19 @@ function exportCSV() {
   a.href = url;
   a.download = 'focusforge-history.csv';
   a.click();
+  URL.revokeObjectURL(url);
 }
 
-function clearAllData() {
-  if (confirm('Delete ALL data? This cannot be undone.')) {
-    localStorage.clear();
-    logs = []; points = 0; dailyGoalMin = 120; pomoCycles = 0;
-    refreshUI();
-    alert('All data has been reset.');
+function escapeCSV(str) {
+  if (typeof str !== 'string') return '';
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return `"${str.replace(/"/g, '""')}"`;
   }
+  return str;
 }
 
 function saveGoal() {
-  const v = parseInt(els.goalInput.value);
+  const v = parseInt(els.goalInput.value, 10);
   if (v >= 30 && v <= 480) {
     dailyGoalMin = v;
     saveData();
@@ -976,10 +983,9 @@ function saveGoal() {
   }
 }
 
-// ──────────────────────────────────────────────
-// INIT
+// Init
 refreshUI();
-setInterval(refreshUI, 60000); // refresh stats every minute
+setInterval(refreshUI, 60000);
 </script>
 </body>
 </html>
