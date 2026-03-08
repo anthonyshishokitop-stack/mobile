@@ -7,7 +7,7 @@
   <meta name="description" content="Local-first screen time tracker • Pomodoro • Charts • Rewards • AR breaks"/>
   <meta name="theme-color" content="#6366f1"/>
 
-  <!-- PWA Manifest (embedded) -->
+  <!-- PWA Manifest -->
   <link rel="manifest" href="data:application/manifest+json,{
     &quot;name&quot;: &quot;FocusForge&quot;,
     &quot;short_name&quot;: &quot;FocusForge&quot;,
@@ -17,18 +17,8 @@
     &quot;background_color&quot;: &quot;#f8f9fc&quot;,
     &quot;theme_color&quot;: &quot;#6366f1&quot;,
     &quot;icons&quot;: [
-      {
-        &quot;src&quot;: &quot;icons/icon-192.png&quot;,
-        &quot;sizes&quot;: &quot;192x192&quot;,
-        &quot;type&quot;: &quot;image/png&quot;,
-        &quot;purpose&quot;: &quot;any maskable&quot;
-      },
-      {
-        &quot;src&quot;: &quot;icons/icon-512.png&quot;,
-        &quot;sizes&quot;: &quot;512x512&quot;,
-        &quot;type&quot;: &quot;image/png&quot;,
-        &quot;purpose&quot;: &quot;any maskable&quot;
-      }
+      {&quot;src&quot;: &quot;icons/icon-192.png&quot;, &quot;sizes&quot;: &quot;192x192&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;purpose&quot;: &quot;any maskable&quot;},
+      {&quot;src&quot;: &quot;icons/icon-512.png&quot;, &quot;sizes&quot;: &quot;512x512&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;purpose&quot;: &quot;any maskable&quot;}
     ]
   }"/>
 
@@ -101,16 +91,28 @@
       left: 0;
       padding: 2.2rem 1.4rem;
       overflow-y: auto;
-      transform: translateX(-100%);
       transition: transform 0.32s ease;
       z-index: 90;
     }
 
+    .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
 
     @media (min-width: 1024px) {
-      .sidebar { transform: translateX(0); }
-      main { margin-left: 260px; }
+      .sidebar {
+        transform: translateX(0) !important;
+        transition: transform 0.32s ease;
+      }
+      main {
+        margin-left: 260px;
+        transition: margin-left 0.32s ease;
+      }
+      .sidebar.hidden-lg {
+        transform: translateX(-100%) !important;
+      }
+      main.expanded {
+        margin-left: 0;
+      }
     }
 
     .sidebar h2 {
@@ -130,6 +132,7 @@
       margin: 0.4rem 0;
       font-weight: 500;
       transition: all 0.18s ease;
+      cursor: pointer;
     }
 
     .sidebar a:hover, .sidebar a.active {
@@ -141,7 +144,6 @@
       padding: var(--gap) 1.8rem;
       max-width: 1480px;
       margin: 0 auto;
-      transition: margin-left 0.4s ease;
     }
 
     .card {
@@ -268,7 +270,9 @@
 
     .small { font-size: 0.96rem; color: var(--text-light); }
 
-    @media (max-width: 1023px) { .sidebar { box-shadow: 6px 0 35px rgba(0,0,0,0.32); } }
+    @media (max-width: 1023px) {
+      .sidebar { box-shadow: 6px 0 35px rgba(0,0,0,0.32); }
+    }
 
     @media (max-width: 640px) {
       header { padding: 1rem 1.2rem; }
@@ -432,19 +436,19 @@
   </div>
 </div>
 
-<!-- Service Worker Registration for PWA -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker registered'))
-        .catch(err => console.log('Service Worker failed:', err));
-    });
-  }
-</script>
+<!-- ────────────────────────────────────────────────
+     JavaScript ───────────────────────────────────────
+────────────────────────────────────────────────────── -->
 
-<!-- Main Application Logic -->
 <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker registered'))
+      .catch(err => console.log('Service Worker failed:', err));
+  });
+}
+
 const els = {
   points: document.getElementById('pointsDisplay'),
   streak: document.getElementById('streak'),
@@ -479,6 +483,39 @@ let pomoPaused = true;
 let pomoInterval;
 let pomoCycles = parseInt(localStorage.getItem('focusforge_pomoCycles')) || 0;
 
+// ─── Sidebar behavior ────────────────────────────────────────
+const sidebar = document.getElementById('sidebar');
+const menuBtn  = document.getElementById('menuBtn');
+const main     = document.querySelector('main');
+const menuLinks = document.querySelectorAll('.sidebar a');
+
+// Mobile toggle
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+
+// Close on outside click (mobile)
+document.addEventListener('click', e => {
+  if (!sidebar.contains(e.target) && !menuBtn.contains(e.target) && !e.target.closest('.sidebar a')) {
+    sidebar.classList.remove('open');
+  }
+});
+
+// Large screen: hide sidebar after link click
+menuLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth >= 1024) {
+      sidebar.classList.add('hidden-lg');
+      main.classList.add('expanded');
+      // Optional: remove .active from all and add to clicked one
+      menuLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    }
+  });
+});
+
+// ─── Rest of your original logic ─────────────────────────────
+
 function formatTime(ts) {
   return new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 }
@@ -506,7 +543,6 @@ function saveData() {
 function refreshUI() {
   els.points.textContent = `Points: ${points}`;
 
-  // Streak (simple version)
   const today = new Date().toISOString().split('T')[0];
   const uniqueDays = [...new Set(logs.map(l => l.date))].sort();
   let streak = 0;
@@ -523,18 +559,15 @@ function refreshUI() {
   }
   els.streak.textContent = `${streak} d`;
 
-  // Today's progress
   const todaySec = logs.filter(l => l.date === today).reduce((sum, l) => sum + l.duration, 0);
   const progress = Math.min(100, Math.round((todaySec / 60) / dailyGoalMin * 100));
   els.goalProgress.textContent = `${progress}%`;
 
-  // Very rough well-being score
   const uniqueDates = new Set(logs.map(l => l.date)).size;
   const avgDailyH = uniqueDates ? (logs.reduce((a,b)=>a+b.duration,0) / uniqueDates) / 3600 : 0;
   const wb = Math.max(0, Math.min(100, Math.round(100 - avgDailyH * 5)));
   els.wellbeing.textContent = `${wb} / 100`;
 
-  // History
   els.history.innerHTML = logs.length === 0
     ? '<p class="small" style="text-align:center; padding:4rem 0; color:var(--text-light);">No sessions recorded yet…</p>'
     : logs.slice(-14).reverse().map(s => `
@@ -547,7 +580,6 @@ function refreshUI() {
       </div>
     `).join('');
 
-  // Suggestions
   const appCounts = logs.reduce((acc, l) => {
     acc[l.app] = (acc[l.app] || 0) + l.duration;
     return acc;
@@ -631,7 +663,6 @@ function drawPieChart(ctx, labels, data) {
     start += angle;
   });
 
-  // Legend
   labels.forEach((label, i) => {
     const y = 30 + i * 28;
     ctx.fillStyle = colors[i % colors.length];
@@ -642,7 +673,6 @@ function drawPieChart(ctx, labels, data) {
   });
 }
 
-// Session tracking
 function startSession() {
   if (currentSession) return;
   const app = els.appName.value.trim();
@@ -685,7 +715,6 @@ function stopSession() {
   if (todaySec > dailyGoalMin*60*0.88) setTimeout(openBreakMode, 1600);
 }
 
-// Pomodoro
 function updatePomoTimer() {
   els.pomoTimer.textContent = formatTimer(pomoTime);
   if (pomoTime > 0) {
@@ -754,7 +783,6 @@ function resetPomodoro() {
   if (currentSession?.app.includes('Pomodoro')) stopSession();
 }
 
-// Break mode
 function openBreakMode() {
   els.arModal.classList.add('open');
   initSimple3D();
@@ -773,7 +801,6 @@ function initSimple3D() {
     return;
   }
 
-  // Very basic spinning cube (fallback visualization)
   const vs = `
     attribute vec4 aPosition;
     uniform mat4 uMVMatrix;
@@ -852,14 +879,8 @@ function initSimple3D() {
     requestAnimationFrame(render);
   }
 
-  // Minimal matrix helpers
   function mat4Identity() {
-    return new Float32Array([
-      1,0,0,0,
-      0,1,0,0,
-      0,0,1,0,
-      0,0,0,1
-    ]);
+    return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
   }
 
   function mat4Perspective(fov, aspect, near, far) {
@@ -905,7 +926,6 @@ function initSimple3D() {
   render();
 }
 
-// Rewards & Data
 function redeemReward(cost, name) {
   if (points >= cost) {
     points -= cost;
@@ -983,7 +1003,6 @@ function saveGoal() {
   }
 }
 
-// Init
 refreshUI();
 setInterval(refreshUI, 60000);
 </script>
